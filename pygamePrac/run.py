@@ -6,6 +6,7 @@ from nodes import NodeGroup
 from pellets import PelletGroup
 from ghost import GhostGroup
 from fruit import Fruit
+from pauser import Pause
 
 #creates a class to init the background
 
@@ -16,11 +17,43 @@ class GameController(object):
         self.background = None
         self.clock = pygame.time.Clock()
         self.fruit = None
+        self.pause = Pause(True)
+        self.level = 0
+        self.lives = 5
+    
+    #this method occurs when pacman loses all his
+    #lives
+    def restartGame(self):
+        self.lives = 5
+        self.level = 0
+        self.pause.paused = True
+        self.fruit = None
+        self.startGame()
+    
+    #this method occurs when pacman loses
+    #one life
+    def resetLevel(self):
+        self.pause.paused = True
+        self.pacman.reset()
+        self.ghosts.reset()
+        self.fruit = None
 
+    #once a level has been cleared, this method
+    #is called to reset the game and maze
+    def nextLevel(self):
+        self.showEntities()
+        self.level += 1
+        self.pause.paused = True
+        self.startGame()
+
+    #sets the backgoround color of the game
     def setBackground(self):
         self.background = pygame.surface.Surface(SCREENSIZE).convert()
         self.background.fill(BLACK)
 
+    #all functions needed upon startup
+    #more deatails of each function can be found in their
+    #respective classes.
     def startGame(self):
         self.setBackground() #sets the background
         self.nodes = NodeGroup("maze1.txt") #loads the text file
@@ -45,22 +78,30 @@ class GameController(object):
             self.pellets.pelletList.remove(pellet)
             if pellet.name == POWERPELLET:
                 self.ghosts.startFreight()
+            if self.pellets.isEmpty():
+                self.hideEntities()
+                self.pause.setPause(pauseTime=3, func = self.nextLevel)
 
 
     
     #will update and check every frame for events and the render
     def update(self):
         dt = self.clock.tick(30) / 1000.0 #represents our change in time from each frame
-        self.pacman.update(dt)
-        self.ghosts.update(dt)
         self.pellets.update(dt)
-        if self.fruit is not None:
-            self.fruit.update(dt)
-        self.checkPelletEvents()
-        self.checkGhostEvents()
-        self.checkEvents()
-        self.checkFruitEvents()
+        if not self.pause.paused:
+            self.pacman.update(dt)
+            self.ghosts.update(dt)
+        
+            if self.fruit is not None:
+                self.fruit.update(dt)
+            self.checkPelletEvents()
+            self.checkGhostEvents()
+            self.checkFruitEvents()
+        afterPauseMethod = self.pause.update(dt)
+        if afterPauseMethod is not None:
+            afterPauseMethod()
         self.render()
+        self.checkEvents()
     
     #checks to see how many pellets pacman has eaten.
     #if he as acheived the correct number of pellets, then
@@ -81,7 +122,19 @@ class GameController(object):
         for ghost in self.ghosts:
             if self.pacman.collideGhost(ghost):
                 if ghost.mode.current is FREIGHT:
+                    self.pacman.visible = False
+                    ghost.visible = False
+                    self.pause.setPause(pauseTime=1, func = self.showEntities)
                     ghost.startSpawn()
+                elif ghost.mode.current is not SPAWN:
+                    if self.pacman.alive:
+                        self.lives -= 1
+                        self.pacman.die()
+                        self.ghosts.hide()
+                        if self.lives <= 0:
+                            self.pause.setPause(pauseTime=3, func = self.restartGame)
+                        else:
+                            self.pause.setPause(pauseTime=3, func=self.resetLevel)
 
     #the program will close once the user presses
     # the close button
@@ -89,6 +142,29 @@ class GameController(object):
         for event in pygame.event.get():
             if event.type == QUIT:
                 exit()
+            elif event.type == KEYDOWN:
+                if event.key == K_SPACE:
+                    if self.pacman.alive:
+                        self.pause.setPause(playerPaused=True)
+                        if not self.pause.paused:
+                            self.showEntities()
+                        else:
+                            self.hideEntities()
+
+   #after a short time, pacman will become visible
+   #after the game is paused and or when
+   # he collides with a ghost
+    def showEntities(self):
+        self.pacman.visible = True
+        self.ghosts.show()
+    
+    #when pacman and a ghost collide in freight mode
+    #they will disappear for a short time
+    def hideEntities(self):
+        self.pacman.visible = False
+        self.ghosts.hide()
+
+
     #will continoulsy render the display for each update
     def render(self):
         self.screen.blit(self.background, (0,0))

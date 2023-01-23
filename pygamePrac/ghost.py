@@ -81,6 +81,14 @@ class Ghost(Entity):
             self.directionMethod = self.goalDirection
             self.spawn()
 
+    #reset's the ghosts attributes. Typically occurs after level
+    #advacing or death of pacman
+    def reset(self):
+        Entity.reset(self)
+        self.points = 200
+        self.directionMethod = self.goalDirection
+
+
 class Blinky(Ghost):
     def __init__(self, node, pacman=None, blinky=None):
        Ghost.__init__(self, node, pacman, blinky)
@@ -185,7 +193,7 @@ class GhostGroup(object):
     #changes the physical visbilty of a ghost
     def hide(self):
         for ghost in self:
-            ghost.visble = False
+            ghost.visible = False
     
     #changes the physical visibilty of a ghost
     def show(self):

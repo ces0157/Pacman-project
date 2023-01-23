@@ -12,6 +12,21 @@ class Pacman(Entity):
         self.color = YELLOW
         self.direction = LEFT
         self.setBetweenNodes(LEFT)
+        self.alive = True
+    
+    #resets pacman after advacing to 
+    #another level or dying
+    def reset(self):
+        Entity.reset(self)
+        self.direction = LEFT
+        self.setBetweenNodes(LEFT)
+        self.alive = True
+
+    #when pacman comes into contact
+    #with a ghosts, he stops and "dies"
+    def die(self):
+        self.alive = False
+        self.direction = STOP
         
     #updates pacmans positions, for each time it is called
     #realtive to key press

@@ -16,4 +16,4 @@ class Fruit(Entity):
     def update(self, dt):
         self.timer += dt
         if self.timer >= self.lifespan:
-            self.destory = True
+            self.destroy = True
