@@ -33,6 +33,7 @@ class Pacman(Entity):
     #updates pacmans positions, for each time it is called
     #realtive to key press
     def update(self, dt):
+        self.sprites.update(dt)
         self.position += self.directions[self.direction]*self.speed*dt
         direction = self.getValidKey()
         if self.overshotTarget():

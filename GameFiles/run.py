@@ -22,7 +22,7 @@ class GameController(object):
         self.fruit = None
         self.pause = Pause(True)
         self.level = 0
-        self.lives = 5
+        self.lives = 3
         self.score = 0
         self.textgroup = TextGroup()
         self.lifesprites = LifeSprites(self.lives)
