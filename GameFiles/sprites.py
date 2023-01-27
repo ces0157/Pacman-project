@@ -12,14 +12,14 @@ class Spritesheet(object):
         self.sheet = pygame.image.load("spritesheet.png").convert() #loads our sheet
         transcolor = self.sheet.get_at((0,0))  #ignores the background color when drawing to the screen
         self.sheet.set_colorkey(transcolor)
-        width = int(self.sheet.get_width() / BASETILEHEIGHT * TILEWIDTH) #modifies width based on the size of our spritesheet
+        width = int(self.sheet.get_width() / BASETILEWIDTH * TILEWIDTH) #modifies width based on the size of our spritesheet
         height = int(self.sheet.get_height() / BASETILEHEIGHT * TILEHEIGHT) #modifies height based on the size of our spiretsheet
         self.sheet = pygame.transform.scale(self.sheet, (width, height))
     
     #extracts an image from the spirte sheet
     def getImage(self, x, y, width, height):
-        x *= TILEHEIGHT
-        y*= TILEHEIGHT
+        x *= TILEWIDTH
+        y *= TILEHEIGHT
         self.sheet.set_clip(pygame.Rect(x,y,width, height))
         return self.sheet.subsurface(self.sheet.get_clip())
 
@@ -97,7 +97,7 @@ class MazeSprites(Spritesheet):
     
     #gets the sprite image based on row, column position
     def getImage(self, x, y):
-        return Spritesheet.getImage(self, x, y, TILEWIDTH, TILEHEIGHT)
+        return Spritesheet.getImage(self, x, y, TILEWIDTH / 2, TILEHEIGHT / 2)
     
     #loads the txt file
     def readMazeFile(self, mazeFile):
