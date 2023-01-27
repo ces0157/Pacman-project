@@ -8,6 +8,8 @@ from ghost import GhostGroup
 from fruit import Fruit
 from pauser import Pause
 from text import TextGroup
+from sprites import LifeSprites
+from sprites import MazeSprites
 
 #creates a class to init the background
 
@@ -23,6 +25,7 @@ class GameController(object):
         self.lives = 5
         self.score = 0
         self.textgroup = TextGroup()
+        self.lifesprites = LifeSprites(self.lives)
     
     #this method occurs when pacman loses all his
     #lives
@@ -36,6 +39,7 @@ class GameController(object):
         self.textgroup.updateScore(self.score)
         self.textgroup.updateLevel(self.level)
         self.textgroup.showText(READYTXT)
+        self.lifesprites.resetLives(self.lives)
     
     #this method occurs when pacman loses
     #one life
@@ -66,7 +70,9 @@ class GameController(object):
     #respective classes.
     def startGame(self):
         self.setBackground() #sets the background
-        self.nodes = NodeGroup("maze1.txt") #loads the text file
+        self.mazesprites = MazeSprites("mazeWBorder.txt", "rotation.txt")
+        self.background = self.mazesprites.constructBackground(self.background, self.level %5)
+        self.nodes = NodeGroup("mazeWBorder.txt") #loads the text file
         self.nodes.setPortalPair((0,17), (27,17)) #creats the portals for the game
         homekey = self.nodes.createHomeNodes(11.5, 14) #set's up the "homebase" for ghosts
         self.nodes.connectHomeNodes(homekey, (12,14), LEFT)
@@ -168,6 +174,7 @@ class GameController(object):
                 elif ghost.mode.current is not SPAWN:
                     if self.pacman.alive:
                         self.lives -= 1
+                        self.lifesprites.removeImage()
                         self.pacman.die()
                         self.ghosts.hide()
                         if self.lives <= 0:
@@ -217,6 +224,12 @@ class GameController(object):
         self.pacman.render(self.screen)
         self.ghosts.render(self.screen)
         self.textgroup.render(self.screen)
+        
+        for i in range(len(self.lifesprites.images)):
+            x = self.lifesprites.images[i].get_width() * i
+            y = SCREENHEIGHT - self.lifesprites.images[i].get_height()
+            self.screen.blit(self.lifesprites.images[i], (x,y))
+
         pygame.display.update()
 
 
