@@ -14,9 +14,11 @@ The controls for this program are just like you would expect. Use the arrow keys
 # Installation & Running
 If you want to download and play this Pacman game there are a few prerequisites. First, and most importantly you need to make sure you have python installed.
 Second, you need to make sure you have the pygame library installed. It should just be:
-'''
+
+```
 pip install pygame
-'''
+```
+
 If that doesn't work here is their webstie for more
 info:
 
