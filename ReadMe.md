@@ -24,15 +24,17 @@ https://www.pygame.org/wiki/GettingStarted#Pygame%20Installation
 
 Lastly, it should already be installed when you download python, but make sure Numpy is installed
 You can use the command:
-'''
+
+```
 pip install numpy
-'''
+```
 
 
 Once Everything is intalled, open the gameFiles directory on your command line, and type:
-'''
+
+```
 python3 run.py
-'''
+```
 If everything is working correclty you should see a window open up on your screen!
 
 
