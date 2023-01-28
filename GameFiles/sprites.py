@@ -8,6 +8,7 @@ from animation import Animator
 BASETILEWIDTH = 16
 BASETILEHEIGHT = 16
 
+#Defines the Attrbutes and methods to be used by the Sprite Sheet
 class Spritesheet(object):
     def __init__(self):
         self.sheet = pygame.image.load("spritesheet.png").convert() #loads our sheet
@@ -25,6 +26,7 @@ class Spritesheet(object):
         return self.sheet.subsurface(self.sheet.get_clip())
 
 #used to easily refrence the pacman sprites
+#Inherits from spirtesheet
 class PacmanSprites(Spritesheet):
     def __init__(self, entity):
         Spritesheet.__init__(self)
@@ -52,7 +54,7 @@ class PacmanSprites(Spritesheet):
     def getImage(self, x, y):
         return Spritesheet.getImage(self, x, y, 2*TILEWIDTH, 2 *TILEHEIGHT)
 
-    #updates pacman's frames depening onthe direction
+    #updates pacman's frames depening on the direction
     def update(self, dt):
         if self.entity.direction == LEFT:
             self.entity.image = self.getImage(*self.animations[LEFT].update(dt))
@@ -74,10 +76,12 @@ class PacmanSprites(Spritesheet):
         for key in list(self.animations.keys()):
             self.animations[key].reset()
 
+#used to easily refrence the ghost sprites
+#Inherits from spirtesheet
 class GhostSprites(Spritesheet):
     def __init__(self, entity):
         Spritesheet.__init__(self)
-        self.x = {BLINKY:0, PINKY:2, INKY:4, CLYDE:6} ##sets the column position
+        self.x = {BLINKY:0, PINKY:2, INKY:4, CLYDE:6} #sets the column position
         self.entity = entity
         self.entity.image = self.getStartImage()
 
@@ -118,10 +122,8 @@ class GhostSprites(Spritesheet):
                self.entity.image = self.getImage(8, 4)
 
 
-            
-
-
-
+#used to easily refrence the fruit sprites
+#Inherits from spirtesheet
 class FruitSprites(Spritesheet):
     def __init__(self, entity):
         Spritesheet.__init__(self)
@@ -135,6 +137,8 @@ class FruitSprites(Spritesheet):
     def getImage(self, x, y):
         return Spritesheet.getImage(self, x, y, 2*TILEWIDTH, 2 *TILEHEIGHT)
 
+#used to show Pacman lives in the bottom left corner
+#inherits from spirte sheet
 class LifeSprites(Spritesheet):
     def __init__(self, numlives):
         Spritesheet.__init__(self)
@@ -156,6 +160,9 @@ class LifeSprites(Spritesheet):
     def getImage(self, x, y):
         return Spritesheet.getImage(self,x,y, 2*TILEWIDTH, 2*TILEHEIGHT)
 
+#Creates the "borders" of the game
+#Reads from a file to get the direction and orientation of 
+#the border images
 class MazeSprites(Spritesheet):
     def __init__(self, mazefile, rotfile):
         Spritesheet.__init__(self)
@@ -172,7 +179,7 @@ class MazeSprites(Spritesheet):
     
     #goes throught the maze file and roatation file and
     #finds places where spirtes need to be located and
-    #at what degree
+    #at what degree. This is found
     #based on if they are digits or not.
     #will then construct/show to screen
     def constructBackground(self, background, y):

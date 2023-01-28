@@ -11,8 +11,9 @@ from text import TextGroup
 from sprites import LifeSprites
 from sprites import MazeSprites
 
-#creates a class to init the background
-
+#This class controls all the operations that happen in the game
+#Every class that we have created is imported into this one, so our game
+#can run.
 class GameController(object):
     def __init__(self):
         pygame.init()

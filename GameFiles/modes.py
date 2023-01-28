@@ -1,5 +1,7 @@
 from constants import *
-    
+
+#Defines the modes that objects are in
+#most of these will be used by ghosts   
 class MainMode(object):    
     def __init__(self):
         self.timer = 0

@@ -2,6 +2,8 @@ import pygame
 from vector import Vector2
 from constants import *
 
+#This class defines the method and attributes
+#associated with txt files
 class Text(object):
     def __init__(self, text, color, x, y, size, time = None, id = None, visible = True):
         self.id = id
@@ -30,6 +32,7 @@ class Text(object):
         self.text = str(newtext)
         self.createLabel()
     
+    #This is used to see if text need to be changed
     def update(self, dt):
         if self.lifespan is not None:
             self.timer += dt
@@ -38,11 +41,13 @@ class Text(object):
                 self.lifespan = None
                 self.destroy = True
     
+    #renders the text to the screen
     def render(self, screen):
         if self.visible:
             x, y = self.position.asTuple()
             screen.blit(self.label, (x,y))
 
+#This class intiates all the text together, so we don't have to do it one by one
 class TextGroup(object):
     def __init__(self):
         self.nextid = 10
@@ -106,6 +111,7 @@ class TextGroup(object):
         if id in self.alltext.keys():
             self.alltext[id].setText(value)
 
+    #renders the text to the screen
     def render(self, screen):
         for tkey in list(self.alltext.keys()):
             self.alltext[tkey].render(screen)

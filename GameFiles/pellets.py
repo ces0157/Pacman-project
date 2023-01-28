@@ -3,6 +3,7 @@ from vector import Vector2
 from constants import *
 import numpy as np
 
+#Defines the attributes and methods to be used by Pellets
 class Pellet(object):
     def __init__(self, row, column):
         self.name = PELLET
@@ -20,6 +21,8 @@ class Pellet(object):
             p = self.position + adjust
             pygame.draw.circle(screen, self.color, p.asInt(), self.radius)
 
+#Defines the class for the PowerPellt(the one that allows pacman to eat the ghosts)
+#Inherits from class Pellet
 class PowerPellet(Pellet):
     def __init__(self, row, column):
         Pellet.__init__(self,row,column)
@@ -37,6 +40,7 @@ class PowerPellet(Pellet):
             self.visible =  not self.visible
             self.timer = 0
 
+#Init all the pellets together, so we don't have to do it indiviually
 class PelletGroup(object):
     def __init__(self, pelletfile):
         self.pelletList = []
@@ -66,7 +70,7 @@ class PelletGroup(object):
     def readPelletfile(self, textfile):
         return np.loadtxt(textfile, dtype = '<U1')
 
-    #Checks to see if all pellets are of the board
+    #Checks to see if all pellets are off the board
     def isEmpty(self):
         if len(self.pelletList) == 0:
             return True

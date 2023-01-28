@@ -3,6 +3,9 @@ from vector import Vector2
 from constants import*
 import numpy as np
 
+#Both of these classes below are the foundation of the game
+#It enables objects to move and the direction they can go in
+#also specfies certain nodes/locations to do specifc things
 class Node(object):
     def __init__(self, x, y):
         self.position = Vector2(x,y)
@@ -12,7 +15,8 @@ class Node(object):
                        LEFT:[PACMAN, BLINKY, PINKY, INKY, CLYDE, FRUIT],
                        RIGHT:[PACMAN, BLINKY, PINKY, INKY, CLYDE, FRUIT]}
     
-    #method used to help visualize our nodes/maze
+    #method used to help visualize our nodes/maze. Will
+    #not be used when the game is done. Just for us to see how our game is being mapped out
     def render(self, screen):
         for n in self.neighbors.keys():
             if self.neighbors[n] is not None:
@@ -20,7 +24,8 @@ class Node(object):
                 line_end =  self.neighbors[n].position.asTuple()
                 pygame.draw.line(screen, WHITE, line_start, line_end, 4)
                 pygame.draw.circle(screen, RED, self.position.asInt(), 12)
-    #Deneis access to a particular node
+    
+    #Denies access to a particular node
     #For example, pacman not being able to access
     #the ghost's home base
     def denyAccess(self, direction, entity):
@@ -34,7 +39,9 @@ class Node(object):
     
 
 
-
+#Creates all the Nodes, intead of having to init every single one, just like
+#the GhostGroup class. Nodes are read in based off of input from a txt file. This class
+#will help define those methods
 class NodeGroup(object):
     def __init__(self, level):
         self.level = level
@@ -48,8 +55,8 @@ class NodeGroup(object):
         self.homekey = None
     
 
-    #reads and loads the mazefild to create our nodes
-    # and maze map
+    #reads and loads the mazefield to create our nodes
+    #and maze map
     def readMazeFile(self, textfile):
         return np.loadtxt(textfile, dtype='<U1')
 
@@ -66,7 +73,7 @@ class NodeGroup(object):
     def constructKey(self, x, y):
         return x*TILEWIDTH, y*TILEHEIGHT
 
-    #when two nodes are found to be connected horizontally
+    #when two nodes are found to be connected horizontally (when ... is found)
     #from the maze.txt. file, their neighbors are updated
     def connectHorizontally(self, data, xoffset = 0, yoffset = 0):
         for row in list(range(data.shape[0])):
@@ -122,11 +129,13 @@ class NodeGroup(object):
         self.nodesLut[homekey].neighbors[direction] = self.nodesLut[key]
         self.nodesLut[key].neighbors[direction*-1] = self.nodesLut[homekey]
 
+    #Defines the nodes in terms of pixels on the screen. Useful for sizing purposes
     def getNodeFromPixels(self, xpixel, ypixel):
         if(xpixel, ypixel) in self.nodesLut.keys():
             return self.nodesLut[(xpixel, ypixel)]
         return None
     
+    #Defines the nodes in term of tiles on the screen, Useful for sizing purposes
     def getNodeFromTiles(self, col, row):
         x,y = self.constructKey(col, row)
         if (x,y) in self.nodesLut.keys():
@@ -138,12 +147,13 @@ class NodeGroup(object):
         nodes = list(self.nodesLut.values())
         return nodes[0]
 
+    #renders the node group to the screen
     def render(self, screen):
         for node in self.nodesLut.values():
             node.render(screen)
     
     #If two nodes exist within this method, then we connect
-    # them to signify a "portal". 
+    #them to signify a "portal". 
     def setPortalPair(self, pair1, pair2):
         key1 = self.constructKey(*pair1)
         key2 = self.constructKey(*pair2)

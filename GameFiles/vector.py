@@ -1,5 +1,8 @@
 import math
 
+#This is another essential class for our game.
+#Defines what a Vector is and how it can be used
+#in the game space
 class Vector2(object):
     def __init__(self, x = 0, y = 0):
         self.x = x
@@ -45,9 +48,11 @@ class Vector2(object):
     def copy(self):
         return Vector2(self.x, self.y)
 
+    #returns the vector as a tuple
     def asTuple(self):
         return self.x, self.y
 
+    #retuns the vector as an int
     def asInt(self):
         return int(self.x), int (self.y)
 

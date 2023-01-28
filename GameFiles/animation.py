@@ -1,4 +1,8 @@
 from constants import *
+
+#This class provides a general animation  framework for obects.
+#It uses frame and frame speed to determine when an animation
+#should occur
 class Animator(object):
     def __init__(self, frames = [], speed = 20, loop = True):
         self.frames = frames
@@ -13,7 +17,7 @@ class Animator(object):
         self.current_frame = 0
         self.finished = False
 
-    #updates through the list at the speed the user has chosen
+    #updates through the frame list at the speed the user has chosen
     def update(self, dt):
         if not self.finished:
             self.nextFrame(dt)
@@ -26,7 +30,7 @@ class Animator(object):
         return self.frames[self.current_frame]
     
     #increments the currentFrame counter
-    #used to access the frame list
+    #used to access the next frame in the frame list
     def nextFrame(self, dt):
         self.dt += dt
         if self.dt >= (1.0 / self.speed):

@@ -5,7 +5,8 @@ from constants import *
 from entity import Entity
 from sprites import PacmanSprites
 
-
+#Defines all the method and attributes to be used by pacman
+#Inherits from class Entity
 class Pacman(Entity):
     def __init__(self, node):
         Entity.__init__(self, node)
